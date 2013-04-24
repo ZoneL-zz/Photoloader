@@ -1,0 +1,19 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/upicon.ico</file>
+    <file>icons/aborticon.ico</file>
+    <file>icons/albumicon.ico</file>
+    <file>icons/backicon.ico</file>
+    <file>icons/continueicon.ico</file>
+    <file>icons/downicon.ico</file>
+    <file>icons/findicon.ico</file>
+    <file>icons/friendsicon.ico</file>
+    <file>icons/loadicon.ico</file>
+    <file>icons/meicon.ico</file>
+    <file>icons/neticon.ico</file>
+    <file>icons/pauseicon.ico</file>
+    <file>icons/photoicon.ico</file>
+    <file>icons/upicon.ico</file>
+    <file>icons/windowicon.ico</file>
+  </qresource>
+</RCC>
