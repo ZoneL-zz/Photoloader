@@ -8,9 +8,8 @@ class userListItem(PyQt4.QtGui.QListWidgetItem):
     def __init__(self, user, parent):
         self.user = user
 
-        self.filename = TEMP_DIR+os.sep+os.path.split(self.user['photo'])[1]
         try:
-            parent.api.download_res(self.user['photo'], self.filename)
+            self.filename = parent.api.download_res(self.user['photo'])
         except:
             self.filename = 'resources\\blank.gif'
 
@@ -24,9 +23,8 @@ class friendsListItem(PyQt4.QtGui.QListWidgetItem):
     def __init__(self, friend, parent):
         self.friend = friend
 
-        self.filename = TEMP_DIR+os.sep+os.path.split(self.friend['photo'])[1]
         try:
-            parent.api.download_res(self.friend['photo'], self.filename)
+            self.filename = parent.api.download_res(self.friend['photo'])
         except:
             self.filename = 'resources\\blank.gif'
 
@@ -40,9 +38,8 @@ class groupsListItem(PyQt4.QtGui.QListWidgetItem):
     def __init__(self, group, parent):
         self.group = group
 
-        self.filename = TEMP_DIR+os.sep+os.path.split(self.group['photo'])[1]
         try:
-            parent.api.download_res(self.group['photo'], self.filename)
+            self.filename = parent.api.download_res(self.group['photo'])
         except:
             self.filename = 'resources\\blank.gif'
 
@@ -56,12 +53,10 @@ class albumsListItem(PyQt4.QtGui.QListWidgetItem):
     def __init__(self, album, parent):
         self.album = album
 
-        self.filename = TEMP_DIR+os.sep+str(self.album['aid'])+'_'+os.path.split(self.album['thumb_src'])[1]
-        if not os.path.exists(self.filename):
-            try:
-                parent.api.download_res(self.album['thumb_src'], self.filename)
-            except:
-                self.filename = 'resources\\blank.gif'
+        try:
+            self.filename = parent.api.download_res(self.album['thumb_src'])
+        except:
+            self.filename = 'resources\\blank.gif'
 
         text = album['title']
         self.itemid = self.album['aid']
@@ -75,12 +70,10 @@ class photosListItem(PyQt4.QtGui.QListWidgetItem):
         self.album = album
         self.photo = photo
 
-        self.filename = TEMP_DIR+os.sep+str(self.album['aid'])+'_'+os.path.split(self.photo['src'])[1]
-        if not os.path.exists(self.filename):
-            try:
-                parent.api.download_res(self.photo['src'], self.filename)
-            except :
-                self.filename = 'resources\\blank.gif'
+        try:
+            self.filename = parent.api.download_res(self.photo['src'])
+        except :
+            self.filename = 'resources\\blank.gif'
 
         self.itemid = photo['pid']
 

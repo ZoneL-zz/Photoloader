@@ -1,5 +1,6 @@
 import urllib.request
 import urllib.parse
+import urllib
 import json
 import os.path
 
@@ -7,41 +8,32 @@ class VKError(Exception):
     """
     VK error class
     """
-    def __init__(self, errno, msg, response=None):
-        self.errno = errno
+    def __init__(self, code, msg, response=None):
+        self.code = code
         self.msg = msg
         self.response = response
 
     def __str__(self):
-        return '[{0}] {1}'.format(self.errno, self.msg)
+        return '[{0}] {1}'.format(self.code, self.msg)
 
-
-class VKapi:  
+class VKapi:
     def __init__(self, access_token=None, user_id=None):
-        """
-        high-level access to vk.com api
-        """
         self.token = access_token
         self.user_id = user_id
-        self._submethod = None
 
     def call_api(self, method, params):
         """
-        low-level function to call api method with parameters
-        params is a list of tuples ('field', value)
+        sends api request
         """
-        params_list = list()
-        if len(params)!=0:
-            params_list = [element for element in params]
         if self.token:
-            params_list.append(("access_token", self.token))
+            params.append(("access_token", self.token))
         url = "https://api.vk.com/method/{0}?{1}".format(method,
-            urllib.parse.urlencode(params_list))
+            urllib.parse.urlencode(params))
         try:
             response = urllib.request.urlopen(url).read()
         except urllib.error.URLError:
             raise VKError(1024, 'Internet connection failed')
-        return json.loads(response.decode())
+        return json.loads(response.decode())        
 
     def compile_params(self, kwargs):
         """
@@ -69,30 +61,23 @@ class VKapi:
             raise VKError(1025, 'Empty response')
         return response['response']
 
-    def download_res(self, link, filename='', dirname=''):
+
+    def download_res(self, link, filename='', reporthook=None):
         """
         Downloads resource from link to filename
+        If filename is absent, downloads file into temporary file
+        with generated name, thar will be returned
         """
-        # urllib.urlretrieve
-        if not filename:
-            if dirname:
-                filename = dirname+os.sep+os.path.split(link)[-1]
-            else:
-                filename = os.path.split(link)[-1]
-        with open(filename, 'wb') as f:
-            block_size = 128*1024  # 128 килобайт
-            req = urllib.request.urlopen(link)
-            while True:
-                block = req.read(block_size)
-                if not block:
-                    break
-                f.write(block)
+        if filename:
+            urllib.request.urlretrieve(link, filename, reporthook=reporthook)
+        else:
+            return urllib.request.urlretrieve(link, reporthook=reporthook)[0]
 
     def upload_res(self, link, filename, res_type):
         """
         Upload resource from filename to link using http POST request
 
-        res_type is the resource type, can be
+        res_type is the resourse type, can be
         - album_upload - filename is list with names of images for
           uploading. 1<=len(filename)<=5
         - wall_upload - filename is a filename of single image
@@ -146,8 +131,3 @@ class VKapi:
         request = urllib.request.Request(link, body, headers)
         response = urllib.request.urlopen(request)
         return json.loads(response.read().decode())
-
-if __name__=='__main__':
-    worker = VKapi()
-    print(worker.call('status.get'))
-    

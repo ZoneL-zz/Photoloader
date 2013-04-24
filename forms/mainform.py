@@ -89,11 +89,11 @@ class MainForm(QtGui.QMainWindow):
 
     @AsThread
     def setUser(self):
-        try:
-            user = self.api.call('users.get', fields='photo')[0]
-        except:
-            # Error!
-            return
+        user = self.api.call('users.get', fields='photo')[0]
+#    except Exception as E:
+#            print(E)
+#            # Error!
+#            return
         item = mylistitems.userListItem(user, self)
         self.tree['tabWidget']['qt_tabwidget_stackedwidget']['userTab']['userList']['self'].addItem(item)
         self.emit(QtCore.SIGNAL('setIcon(QString, int)'),
@@ -104,12 +104,13 @@ class MainForm(QtGui.QMainWindow):
 
     @AsThread
     def setFriends(self):
-        try:
-            friends = self.api.call('friends.get',
-                fields='photo', order='hints')
-        except:
-            # Error!
-            return
+    
+        friends = self.api.call('friends.get',
+            fields='photo', order='hints')
+#        except Exception as E:
+#            print(E)
+#            # Error!
+#            return
         for n, friend in enumerate(friends, 1):
             item = mylistitems.friendsListItem(friend, self)
             self.tree['tabWidget']['qt_tabwidget_stackedwidget']['friendsTab']['friendsList']['self'].addItem(item)
@@ -121,12 +122,13 @@ class MainForm(QtGui.QMainWindow):
 
     @AsThread
     def setGroups(self):
-        try:
-            groups = self.api.call('groups.get',
-                extended=1)[1:]
-        except:
-            # Error!
-            return
+    
+        groups = self.api.call('groups.get',
+            extended=1)[1:]
+#        except Exception as E:
+#            print(E)
+#            # Error!
+#            return
         for n, group in enumerate(groups, 1):
             if self.refresh_load_stop:
                 return
@@ -146,12 +148,13 @@ class MainForm(QtGui.QMainWindow):
         self.tree['stackedWidget']['albumsPage']['checkAllButton']['self'].setDisabled(True)
         self.tree['stackedWidget']['albumsPage']['uncheckAllButton']['self'].setDisabled(True)
         self.tree['stackedWidget']['albumsPage']['albumsStopButton']['self'].setEnabled(True)
-        try:
-            albums = self.api.call('photos.getAlbums',
-                oid=oid, need_system=1, need_covers=1)
-        except:
-            # Error!
-            return
+    
+        albums = self.api.call('photos.getAlbums',
+            oid=oid, need_system=1, need_covers=1)
+#        except Exception as E:
+#            print(E)
+#            # Error!
+#            return
         self.tree['stackedWidget']['albumsPage']['albumsCountLabel']['self'].setText(str(len(albums)))
         self.albums_load_stop = False
         self.tree['stackedWidget']['albumsPage']['albumsList']['self'].clear()
@@ -180,12 +183,13 @@ class MainForm(QtGui.QMainWindow):
         self.tree['stackedWidget']['photosPage']['uncheckAllButton_2']['self'].setDisabled(True)
         self.tree['stackedWidget']['photosPage']['loadPhotos']['self'].setDisabled(True)
         self.tree['stackedWidget']['photosPage']['photosStopButton']['self'].setEnabled(True)
-        try:
-            photos = self.api.call('photos.get',
-                aid=album['aid'], oid=album['owner_id'])
-        except:
-            # Error!
-            return
+    
+        photos = self.api.call('photos.get',
+            aid=album['aid'], oid=album['owner_id'])
+#        except Exception as E:
+#            print(E)
+#            # Error!
+#            return
         self.tree['stackedWidget']['photosPage']['photosCountLabel']['self'].setText(str(len(photos)))
         self.photos_load_stop = False
         for n, photo in enumerate(photos, 1):
